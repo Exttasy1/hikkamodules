@@ -1,0 +1,68 @@
+import asyncio
+from telethon.tl.types import Message
+from telethon import functions
+from .. import loader, utils
+
+#meta developer: @mineevor
+
+@loader.tds
+class AutoBoost(loader.Module):
+    """Помощь - .helpaboost\nМодуль написал @Exttasy1\nпомогал ему @sqlmerr"""
+    strings = {
+        "name": "AutoBoost"
+    }
+
+    def __init__(self):
+        self.config = loader.ModuleConfig(
+                loader.ConfigValue(
+                    "status",
+                    False,
+                    lambda: "НЕ ТРОГАТЬ!!",
+                    validator=loader.validators.Boolean()
+                ),
+                loader.ConfigValue(
+                    "status",
+                    False,
+                    lambda: "НЕ ТРОГАТЬ!!",
+                    validator=loader.validators.Boolean()
+                ),
+                loader.ConfigValue(
+                    "type",
+                    None,
+                    lambda: "Тут напишите тип бустера, Р/Д",
+                    validator=loader.validators.String()
+                ),
+                loader.ConfigValue(
+                    "mnoz",
+                    None,
+                    lambda: "Тут напишите множитель бустера, 1.5, 2, 2.5, 3",
+                    validator=loader.validators.Float()
+                )
+
+            )
+
+    @loader.command()
+    async def helpaboost(self, message):
+        """Помощь по AutoBoost"""
+        await utils.answer(message, "Выполняю.")
+        await utils.answer(message, "Выполняю..")
+        await utils.answer(message, "Выполняю...")
+        await utils.answer(message, f"<emoji document_id=5440660757194744323>‼️</emoji> Чтобы <b>AutoBoost</b> работал, пропишите <b>.aboost</b>! А так же в <b>.cfg</b> поставьте параметры под <b>свои нужды</b>!")
+        
+    @loader.command()
+    async def aboost(self, message):
+        """Включение/ выключение"""
+        self.config["status"] = not self.config["status"]
+        if self.config["status"]:
+            await utils.answer(message, f"<emoji document_id=5447644880824181073>⚠️</emoji> AutoBoost включен!")
+            type = self.config["type"]
+            mnoz = self.config["mnoz"]
+            await self.client.send_message(5522271758, f"Буст {type} {mnoz}")
+        else:
+            await utils.answer(message, f"<emoji document_id=5447644880824181073>⚠️</emoji> AutoBoost выключен!")
+
+    @loader.watcher(only_message=True, chat_id=5522271758)
+    async def watcher(self, message):
+        if self.config["status"]:
+            if "Бустер закончил свое действие" in message.raw_text:
+                await self.client.send_message(5522271758, f"Буст {type} {mnoz}")
