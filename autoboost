@@ -2,24 +2,20 @@ import asyncio
 from telethon.tl.types import Message
 from telethon import functions
 from .. import loader, utils
+from ..inline.types import InlineCall
 
+__version__=(1, 1)
 #meta developer: @mineevor
 
 @loader.tds
 class AutoBoost(loader.Module):
-    """Помощь - .helpaboost\nМодуль написал @Exttasy1\nпомогал ему @sqlmerr"""
+    """"""
     strings = {
         "name": "AutoBoost"
     }
 
     def __init__(self):
         self.config = loader.ModuleConfig(
-                loader.ConfigValue(
-                    "status",
-                    False,
-                    lambda: "НЕ ТРОГАТЬ!!",
-                    validator=loader.validators.Boolean()
-                ),
                 loader.ConfigValue(
                     "status",
                     False,
@@ -38,20 +34,17 @@ class AutoBoost(loader.Module):
                     lambda: "Тут напишите множитель бустера, 1.5, 2, 2.5, 3",
                     validator=loader.validators.Float()
                 )
-
             )
 
     @loader.command()
-    async def helpaboost(self, message):
+    async def helpab(self, message):
         """Помощь по AutoBoost"""
         await utils.answer(message, "Выполняю.")
         await utils.answer(message, "Выполняю..")
         await utils.answer(message, "Выполняю...")
-        await utils.answer(message, f"<emoji document_id=5440660757194744323>‼️</emoji> Чтобы <b>AutoBoost</b> работал, пропишите <b>.aboost</b>! А так же в <b>.cfg</b> поставьте параметры под <b>свои нужды</b>!")
+        await utils.answer(message, f"<emoji document_id=5440660757194744323>‼️</emoji> Чтобы <b>AutoBoost</b> работал, пропишите <b>.ab</b>! А так же в <b>.cfg</b> поставьте параметры под <b>свои нужды</b>!")
         
-    @loader.command()
     async def aboost(self, message):
-        """Включение/ выключение"""
         self.config["status"] = not self.config["status"]
         if self.config["status"]:
             await utils.answer(message, f"<emoji document_id=5447644880824181073>⚠️</emoji> AutoBoost включен!")
@@ -66,3 +59,55 @@ class AutoBoost(loader.Module):
         if self.config["status"]:
             if "Бустер закончил свое действие" in message.raw_text:
                 await self.client.send_message(5522271758, f"Буст {type} {mnoz}")
+    @loader.command()            
+    async def ab(self, message):
+        """Управление модулем кнопками"""
+        await self.inline.form(
+                text="Управление модулем AutoBoost",
+                message=message,
+                reply_markup=[
+                        {
+                            "text": "Вкл/Выкл",
+                            "callback": self.inline_but_one,
+                        },
+                        {
+                            "text": "Настройки",
+                            "callback": self.inline_but_two,
+                        }
+                    ]
+            )
+            
+    async def inline_but_one(self, call: InlineCall):
+        self.config["status"] = not self.config["status"]
+        status = self.config["status"]
+        await call.answer(f"AutoBoost {status}")
+    
+    async def inline_but_two(self, call: InlineCall):
+        type = self.config["type"]
+        mnoz = self.config["mnoz"]
+        await call.edit(
+                text=f"Настройки\nТип: {type}\nМножитель: {mnoz}",
+                reply_markup=[
+                        [
+                            {
+                                "text": "Назад",
+                                "callback": self.inline_but_three,
+                            }
+                        ]
+                    ]
+            )
+            
+    async def inline_but_three(self, call: InlineCall):
+        await call.edit(
+                text="Управление модулем AutoBoost",
+                reply_markup=[
+                        {
+                            "text": "Вкл/Выкл",
+                            "callback": self.inline_but_one,
+                        },
+                        {
+                            "text": "Настройки",
+                            "callback": self.inline_but_two,
+                        }
+                    ]
+            )
