@@ -4,12 +4,11 @@ from telethon import functions
 from .. import loader, utils
 from ..inline.types import InlineCall
 
-__version__=(1, 1)
 #meta developer: @mineevor
 
 @loader.tds
 class AutoBoost(loader.Module):
-    """"""
+    """Модуль на автоматическое использование вами указанного бустера"""
     strings = {
         "name": "AutoBoost"
     }
@@ -36,30 +35,15 @@ class AutoBoost(loader.Module):
                 )
             )
 
-    @loader.command()
-    async def helpab(self, message):
-        """Помощь по AutoBoost"""
-        await utils.answer(message, "Выполняю.")
-        await utils.answer(message, "Выполняю..")
-        await utils.answer(message, "Выполняю...")
-        await utils.answer(message, f"<emoji document_id=5440660757194744323>‼️</emoji> Чтобы <b>AutoBoost</b> работал, пропишите <b>.ab</b>! А так же в <b>.cfg</b> поставьте параметры под <b>свои нужды</b>!")
-        
-    async def aboost(self, message):
-        self.config["status"] = not self.config["status"]
-        if self.config["status"]:
-            await utils.answer(message, f"<emoji document_id=5447644880824181073>⚠️</emoji> AutoBoost включен!")
-            type = self.config["type"]
-            mnoz = self.config["mnoz"]
-            await self.client.send_message(5522271758, f"Буст {type} {mnoz}")
-        else:
-            await utils.answer(message, f"<emoji document_id=5447644880824181073>⚠️</emoji> AutoBoost выключен!")
-
     @loader.watcher(only_message=True, chat_id=5522271758)
     async def watcher(self, message):
         if self.config["status"]:
-            if "Бустер закончил свое действие" in message.raw_text:
+            type = self.config["type"]
+            mnoz = self.config["mnoz"]
+            if "закончил свое действие." in message.raw_text:
                 await self.client.send_message(5522271758, f"Буст {type} {mnoz}")
-    @loader.command()            
+                
+    @loader.command()
     async def ab(self, message):
         """Управление модулем кнопками"""
         await self.inline.form(
@@ -81,6 +65,10 @@ class AutoBoost(loader.Module):
         self.config["status"] = not self.config["status"]
         status = self.config["status"]
         await call.answer(f"AutoBoost {status}")
+        if self.config["status"]:
+            type = self.config["type"]
+            mnoz = self.config["mnoz"]
+            await self.client.send_message(5522271758, f"Буст {type} {mnoz}")
     
     async def inline_but_two(self, call: InlineCall):
         type = self.config["type"]
@@ -88,6 +76,16 @@ class AutoBoost(loader.Module):
         await call.edit(
                 text=f"Настройки\nТип: {type}\nМножитель: {mnoz}",
                 reply_markup=[
+                        [
+                            {
+                                "text": "Тип",
+                                "callback": self.inline_but_four,
+                            },
+                            {
+                                "text": "Множитель",
+                                "callback": self.inline_but_five,
+                            }
+                        ],
                         [
                             {
                                 "text": "Назад",
@@ -111,3 +109,155 @@ class AutoBoost(loader.Module):
                         }
                     ]
             )
+            
+    async def inline_but_four(self, call: InlineCall):
+        await call.edit(
+                text=f"Выберите тип бустера:",
+                reply_markup=[
+                        [
+                            {
+                                "text": "Руда",
+                                "callback": self.abobaone,
+                            },
+                            {
+                                "text": "Деньги",
+                                "callback": self.abobatwo,
+                            }
+                        ],
+                        [
+                            {
+                                "text": "Назад",
+                                "callback": self.inline_but_twoa,
+                            }
+                        ]
+                    ]
+            )
+            
+    async def inline_but_twoa(self, call: InlineCall):
+        type = self.config["type"]
+        mnoz = self.config["mnoz"]
+        await call.edit(
+                text=f"Настройки\nТип: {type}\nМножитель: {mnoz}",reply_markup=[
+                        [
+                            {
+                                "text": "Тип",
+                                "callback": self.inline_but_four,
+                            },
+                            {
+                                "text": "Множитель",
+                                "callback": self.inline_but_five,
+                            }
+                        ],
+                        [
+                            {
+                                "text": "Назад",
+                                "callback": self.inline_but_three,
+                            }
+                        ]
+                    ]
+                
+            )
+            
+    async def inline_but_five(self, call: InlineCall):
+        await call.edit(
+                text=f"Выберите множитель бустера:",
+                reply_markup=[
+                        [
+                            {
+                                "text": "1.5",
+                                "callback": self.abobathree,
+                            },
+                            {
+                                "text": "2.0",
+                                "callback": self.abobafour,
+                            },
+                            {
+                                "text": "2.5",
+                                "callback": self.abobafive,
+                            },
+                            {
+                                "text": "3.0",
+                                "callback": self.abobasix,
+                            }
+
+                        ],
+                        [
+                            {
+                                "text": "Назад",
+                                "callback": self.inline_but_twoa,
+                            }
+                        ]
+                    ]
+            )
+            
+    async def abobaone(self, call: InlineCall):
+        await call.edit(
+                text="Вы изменили тип бустера на: \"Руда\"",
+                reply_markup=[
+                        {
+                            "text": "Назад",
+                            "callback": self.inline_but_twoa,
+                        }
+                    ]
+            )
+        self.config["type"] = "Р"
+        
+    async def abobatwo(self, call: InlineCall):
+        await call.edit(
+                text="Вы изменили тип бустера на: \"Деньги\"",
+                reply_markup=[
+                        {
+                            "text": "Назад",
+                            "callback": self.inline_but_twoa,
+                        }
+                    ]
+            )
+        self.config["type"] = "Д"
+        
+    async def abobathree(self, call: InlineCall):
+        await call.edit(
+                text="Вы изменили множитель бустера на: \"1.5\"",
+                reply_markup=[
+                        {
+                            "text": "Назад",
+                            "callback": self.inline_but_twoa,
+                        }
+                    ]
+            )
+        self.config["mnoz"] = 1.5
+        
+    async def abobafour(self, call: InlineCall):
+        await call.edit(
+                text="Вы изменили множитель бустера на: \"2.0\"",
+                reply_markup=[
+                        {
+                            "text": "Назад",
+                            "callback": self.inline_but_twoa,
+                        }
+                    ]
+            )
+        self.config["mnoz"] = 2.0
+        
+    async def abobafive(self, call: InlineCall):
+        await call.edit(
+                text="Вы изменили множитель бустера на: \"2.5\"",
+                reply_markup=[
+                        {
+                            "text": "Назад",
+                            "callback": self.inline_but_twoa,
+                        }
+                    ]
+            )
+        self.config["mnoz"] = 2.5
+        
+    async def abobasix(self, call: InlineCall):
+        await call.edit(
+                text="Вы изменили множитель бустера на: \"3.0\"",
+                reply_markup=[
+                        {
+                            "text": "Назад",
+                            "callback": self.inline_but_twoa,
+                        }
+                    ]
+            )
+        self.config["mnoz"] = 3.0
