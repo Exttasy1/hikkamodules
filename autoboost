@@ -46,8 +46,15 @@ class AutoBoost(loader.Module):
     @loader.command()
     async def ab(self, message):
         """Управление модулем кнопками"""
+        type = self.config["type"]
+        mnoz = self.config["mnoz"]
+        if self.config["status"]:
+            status = "Включен"
+        else:
+            status = "Выключен"
+            
         await self.inline.form(
-                text="Управление модулем AutoBoost",
+                text=f"🎮 <b>Упраление модулем</b> <b>AutoBoost</b>\n\n▫️<b>Статус:</b> {status}\n▫️<b>Текущий бустер:</b> {type} {mnoz}",
                 message=message,
                 reply_markup=[
                         {
@@ -69,12 +76,32 @@ class AutoBoost(loader.Module):
             type = self.config["type"]
             mnoz = self.config["mnoz"]
             await self.client.send_message(5522271758, f"Буст {type} {mnoz}")
+        type = self.config["type"]
+        mnoz = self.config["mnoz"]
+        if self.config["status"]:
+            status = "Включен"
+        else:
+            status = "Выключен"
+            
+        await call.edit(
+                text=f"🎮 <b>Упраление модулем</b> <b>AutoBoost</b>\n\n▫️<b>Статус:</b> {status}\n▫️<b>Текущий бустер:</b> {type} {mnoz}",
+                reply_markup=[
+                        {
+                            "text": "Вкл/Выкл",
+                            "callback": self.inline_but_one,
+                        },
+                        {
+                            "text": "Настройки",
+                            "callback": self.inline_but_two,
+                        }
+                    ]
+            )
     
     async def inline_but_two(self, call: InlineCall):
         type = self.config["type"]
         mnoz = self.config["mnoz"]
         await call.edit(
-                text=f"Настройки\nТип: {type}\nМножитель: {mnoz}",
+                text=f"⚙️ <b>Настройки</b>\n\n▫️<b>Тип:</b> {type}\n▫️<b>Множитель: </b>{mnoz}",
                 reply_markup=[
                         [
                             {
@@ -96,8 +123,15 @@ class AutoBoost(loader.Module):
             )
             
     async def inline_but_three(self, call: InlineCall):
+        type = self.config["type"]
+        mnoz = self.config["mnoz"]
+        if self.config["status"]:
+            status = "Включен"
+        else:
+            status = "Выключен"
+            
         await call.edit(
-                text="Управление модулем AutoBoost",
+                text=f"🎮 <b>Упраление модулем</b> <b>AutoBoost</b>\n\n▫️<b>Статус:</b> {status}\n▫️<b>Текущий бустер:</b> {type} {mnoz}",
                 reply_markup=[
                         {
                             "text": "Вкл/Выкл",
@@ -110,9 +144,11 @@ class AutoBoost(loader.Module):
                     ]
             )
             
+        
+            
     async def inline_but_four(self, call: InlineCall):
         await call.edit(
-                text=f"Выберите тип бустера:",
+                text=f"🗒️ <b>Выберите тип бустера:</b>",
                 reply_markup=[
                         [
                             {
@@ -137,7 +173,8 @@ class AutoBoost(loader.Module):
         type = self.config["type"]
         mnoz = self.config["mnoz"]
         await call.edit(
-                text=f"Настройки\nТип: {type}\nМножитель: {mnoz}",reply_markup=[
+                text=f"⚙️ <b>Настройки</b>\n\n▫️<b>Тип:</b> {type}\n▫️<b>Множитель: </b>{mnoz}",
+                reply_markup=[
                         [
                             {
                                 "text": "Тип",
@@ -155,12 +192,11 @@ class AutoBoost(loader.Module):
                             }
                         ]
                     ]
-                
             )
-            
+        
     async def inline_but_five(self, call: InlineCall):
         await call.edit(
-                text=f"Выберите множитель бустера:",
+                text=f"🗒️ <b>Выберите множитель бустера:</b>",
                 reply_markup=[
                         [
                             {
@@ -192,7 +228,7 @@ class AutoBoost(loader.Module):
             
     async def abobaone(self, call: InlineCall):
         await call.edit(
-                text="Вы изменили тип бустера на: \"Руда\"",
+                text=f"<b>📝 Вы изменили тип бустера на:</b> \"Руда\"",
                 reply_markup=[
                         {
                             "text": "Назад",
@@ -200,11 +236,11 @@ class AutoBoost(loader.Module):
                         }
                     ]
             )
-        self.config["type"] = "Р"
+        self.config["type"] = "Руда"
         
     async def abobatwo(self, call: InlineCall):
         await call.edit(
-                text="Вы изменили тип бустера на: \"Деньги\"",
+                text=f"<b>📝 Вы изменили тип бустера на:</b> \"Деньги\"",
                 reply_markup=[
                         {
                             "text": "Назад",
@@ -212,11 +248,11 @@ class AutoBoost(loader.Module):
                         }
                     ]
             )
-        self.config["type"] = "Д"
+        self.config["type"] = "Деньги"
         
     async def abobathree(self, call: InlineCall):
         await call.edit(
-                text="Вы изменили множитель бустера на: \"1.5\"",
+                text=f"<b>📝 Вы изменили множитель бустера на:</b> \"1.5\"",
                 reply_markup=[
                         {
                             "text": "Назад",
@@ -228,7 +264,7 @@ class AutoBoost(loader.Module):
         
     async def abobafour(self, call: InlineCall):
         await call.edit(
-                text="Вы изменили множитель бустера на: \"2.0\"",
+                text=f"<b>📝 Вы изменили множитель бустера на:</b> \"2.0\"",
                 reply_markup=[
                         {
                             "text": "Назад",
@@ -240,7 +276,7 @@ class AutoBoost(loader.Module):
         
     async def abobafive(self, call: InlineCall):
         await call.edit(
-                text="Вы изменили множитель бустера на: \"2.5\"",
+                text=f"<b>📝 Вы изменили множитель бустера на:</b> \"2.5\"",
                 reply_markup=[
                         {
                             "text": "Назад",
@@ -252,7 +288,7 @@ class AutoBoost(loader.Module):
         
     async def abobasix(self, call: InlineCall):
         await call.edit(
-                text="Вы изменили множитель бустера на: \"3.0\"",
+                text=f"<b>📝 Вы изменили множитель бустера на:</b> \"3.0\"",
                 reply_markup=[
                         {
                             "text": "Назад",
