@@ -1,10 +1,11 @@
 import asyncio
-from telethon.tl.types import Message
+from telethon.tl.types import Message, ChatAdminRights
 from telethon import functions
 from .. import loader, utils
 from ..inline.types import InlineCall
 
-#meta developer: @mineevor
+# idea: @exttasy1
+# meta developer: @mineevor
 
 @loader.tds
 class AutoBoost(loader.Module):
@@ -34,14 +35,32 @@ class AutoBoost(loader.Module):
                     validator=loader.validators.Float()
                 )
             )
-
+    
+    async def client_ready(self):
+        self._backup_channel, _ = await utils.asset_channel(
+            self._client,
+            "AutoBoostChat",
+            "Группа для работы модуля AutoBoost от @exttasy1\nНе добавляйте сюда других людей или ботов!",
+            silent=True,
+            archive=True,
+            _folder="hikka",
+        )
+        await self.client(functions.channels.InviteToChannelRequest(self._backup_channel, ['@mine_evo_bot']))
+        await self.client(functions.channels.EditAdminRequest(
+                channel=self._backup_channel,
+                user_id="@mine_evo_bot",
+                admin_rights=ChatAdminRights(ban_users=True, post_messages=True, edit_messages=True),
+                rank="EVO",
+            )
+        )
+    
     @loader.watcher(only_message=True, chat_id=5522271758)
     async def watcher(self, message):
         if self.config["status"]:
             type = self.config["type"]
             mnoz = self.config["mnoz"]
             if "закончил свое действие." in message.raw_text:
-                await self.client.send_message(5522271758, f"Буст {type} {mnoz}")
+                await self.client.send_message(self._backup_channel, f"Буст {type} {mnoz}")
                 
     @loader.command()
     async def ab(self, message):
@@ -52,9 +71,14 @@ class AutoBoost(loader.Module):
             status = "Включен"
         else:
             status = "Выключен"
-            
+        if self.config["type"] == "Р":
+            typea = "Руда"
+        elif self.config["type"] == "Д":
+            typea = "Деньги"
+        else:
+            typea = ""
         await self.inline.form(
-                text=f"🎮 <b>Упраление модулем</b> <b>AutoBoost</b>\n\n▫️<b>Статус:</b> {status}\n▫️<b>Текущий бустер:</b> {type} {mnoz}",
+                text=f"🎮 <b>Упраление модулем</b> <b>AutoBoost</b>\n\n▫️<b>Статус:</b> {status}\n▫️<b>Текущий бустер:</b> {typea} {mnoz}",
                 message=message,
                 reply_markup=[
                         {
@@ -75,16 +99,21 @@ class AutoBoost(loader.Module):
         if self.config["status"]:
             type = self.config["type"]
             mnoz = self.config["mnoz"]
-            await self.client.send_message(5522271758, f"Буст {type} {mnoz}")
+            await self.client.send_message(self._backup_channel, f"Буст {type} {mnoz}")
         type = self.config["type"]
         mnoz = self.config["mnoz"]
         if self.config["status"]:
             status = "Включен"
         else:
             status = "Выключен"
-            
+        if self.config["type"] == "Р":
+            typea = "Руда"
+        elif self.config["type"] == "Д":
+            typea = "Деньги"
+        else:
+            typea = ""
         await call.edit(
-                text=f"🎮 <b>Упраление модулем</b> <b>AutoBoost</b>\n\n▫️<b>Статус:</b> {status}\n▫️<b>Текущий бустер:</b> {type} {mnoz}",
+                text=f"🎮 <b>Упраление модулем</b> <b>AutoBoost</b>\n\n▫️<b>Статус:</b> {status}\n▫️<b>Текущий бустер:</b> {typea} {mnoz}",
                 reply_markup=[
                         {
                             "text": "Вкл/Выкл",
@@ -98,10 +127,16 @@ class AutoBoost(loader.Module):
             )
     
     async def inline_but_two(self, call: InlineCall):
+        if self.config["type"] == "Р":
+            typea = "Руда"
+        elif self.config["type"] == "Д":
+            typea = "Деньги"
+        else:
+            typea = ""
         type = self.config["type"]
         mnoz = self.config["mnoz"]
         await call.edit(
-                text=f"⚙️ <b>Настройки</b>\n\n▫️<b>Тип:</b> {type}\n▫️<b>Множитель: </b>{mnoz}",
+                text=f"⚙️ <b>Настройки</b>\n\n▫️<b>Тип:</b> {typea}\n▫️<b>Множитель: </b>{mnoz}",
                 reply_markup=[
                         [
                             {
@@ -130,8 +165,14 @@ class AutoBoost(loader.Module):
         else:
             status = "Выключен"
             
+        if self.config["type"] == "Р":
+            typea = "Руда"
+        elif self.config["type"] == "Д":
+            typea = "Деньги"
+        else:
+            typea = ""
         await call.edit(
-                text=f"🎮 <b>Упраление модулем</b> <b>AutoBoost</b>\n\n▫️<b>Статус:</b> {status}\n▫️<b>Текущий бустер:</b> {type} {mnoz}",
+                text=f"🎮 <b>Упраление модулем</b> <b>AutoBoost</b>\n\n▫️<b>Статус:</b> {status}\n▫️<b>Текущий бустер:</b> {typea} {mnoz}",
                 reply_markup=[
                         {
                             "text": "Вкл/Выкл",
@@ -172,8 +213,14 @@ class AutoBoost(loader.Module):
     async def inline_but_twoa(self, call: InlineCall):
         type = self.config["type"]
         mnoz = self.config["mnoz"]
+        if self.config["type"] == "Р":
+            typea = "Руда"
+        elif self.config["type"] == "Д":
+            typea = "Деньги"
+        else:
+            typea = ""
         await call.edit(
-                text=f"⚙️ <b>Настройки</b>\n\n▫️<b>Тип:</b> {type}\n▫️<b>Множитель: </b>{mnoz}",
+                text=f"⚙️ <b>Настройки</b>\n\n▫️<b>Тип:</b> {typea}\n▫️<b>Множитель: </b>{mnoz}",
                 reply_markup=[
                         [
                             {
@@ -236,7 +283,7 @@ class AutoBoost(loader.Module):
                         }
                     ]
             )
-        self.config["type"] = "Руда"
+        self.config["type"] = "Р"
         
     async def abobatwo(self, call: InlineCall):
         await call.edit(
@@ -248,7 +295,7 @@ class AutoBoost(loader.Module):
                         }
                     ]
             )
-        self.config["type"] = "Деньги"
+        self.config["type"] = "Д"
         
     async def abobathree(self, call: InlineCall):
         await call.edit(
