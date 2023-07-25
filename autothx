@@ -29,13 +29,13 @@ class AutoThx(loader.Module):
                 user_id="@mine_evo_bot",
                 admin_rights=ChatAdminRights(ban_users=True, post_messages=True, edit_messages=True),
                 rank="AutoThx",))
+        if self.db.get(self.name, "autothxstatus") == None:
+            self.db.set(self.name, "autothxstatus", True)
 
 
     @loader.command()
     async def athx(self, message):
         """Включение/ выключение"""
-        if self.db.get(self.name, "autothxstatus") == None:
-            self.db.set(self.name, "autothxstatus", True)
         if self.db.get(self.name, "autothxstatus"):
             self.db.set(self.name, "autothxstatus", False)
         else:
