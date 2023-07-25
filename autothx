@@ -30,7 +30,7 @@ class AutoThx(loader.Module):
                 admin_rights=ChatAdminRights(ban_users=True, post_messages=True, edit_messages=True),
                 rank="AutoThx",))
         if self.db.get(self.name, "autothxstatus") == None:
-            self.db.set(self.name, "autothxstatus", True)
+            self.db.set(self.name, "autothxstatus", False)
 
 
     @loader.command()
