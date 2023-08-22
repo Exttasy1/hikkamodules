@@ -537,10 +537,9 @@ class Autoevo(loader.Module):
 
     @loader.loop()
     async def mine_loop(self):
-        interval=self.config['intervalmine']
         if self.get('aestatus') == True and self.get('aestatusmine') == True:
             await self.client.send_message("@mine_evo_bot", 'коп')
-            await asyncio.sleep(interval)
+            await asyncio.sleep(self.config['intervalmine'])
 
     @loader.loop()
     async def eb_loop(self):
