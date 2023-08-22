@@ -70,24 +70,8 @@ class Autoevo(loader.Module):
             self.set("mefeb", 0)
         if self.get("kreb") == None:
             self.set("kreb", 0)
-        intervalmine=self.config["intervalmine"]
-        if self.get("aestatus"):
-            if self.get("aestatusmine"):
-                while self.get("aestatusmine")==True and self.get("aestatus")==True:
-                    await self.client.send_message("@mine_evo_bot", "коп")
-                    await asyncio.sleep(intervalmine)
-        async with self.client.conversation(self._backup_channel) as conv:
-            while self.get('aestatuseb'):
-                await conv.send_message("еб")
-                try:
-                    res = conv.get_response()
-                except asyncio.exceptions.TimeoutError:
-                    
-                    await conv.send_message("еб")
-                else:
-                    break
-                await asyncio.sleep(1800)
-                conv.cancel()
+        self.mine_loop.start()
+        self.eb_loop.start()
                 
     def __init__(self):
         self.config = loader.ModuleConfig(
@@ -562,3 +546,16 @@ class Autoevo(loader.Module):
                         ]
                     ]
             )
+
+    @loader.loop()
+    async def mine_loop(self):
+        interval=self.config['intervalmine']
+        if self.get('aestatus') == True and self.get('aestatusmine') == True:
+            await self.client.send_message("@mine_evo_bot", 'коп')
+            await asyncio.sleep(interval)
+
+    @loader.loop()
+    async def eb_loop(self):
+        if self.get('aestatus') == True and self.get('aestatuseb') == True:
+            await self.client.send_message("@mine_evo_bot", 'еб')
+            await asyncio.sleep(600)
