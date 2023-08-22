@@ -16,18 +16,6 @@ class Autoevo(loader.Module):
     strings={"name": "AutoEvo"}
     
     async def client_ready(self):
-        self._backup_channel, _ = await utils.asset_channel(
-            self.client,
-            "AutoEvo",
-            "Группа для модуля AutoEvo",
-            silent=True,
-            archive=True)
-        await self.client(functions.channels.InviteToChannelRequest(self._backup_channel, ['@mine_evo_bot']))
-        await self.client(functions.channels.EditAdminRequest(
-                channel=self._backup_channel,
-                user_id="@mine_evo_bot",
-                admin_rights=ChatAdminRights(ban_users=True, post_messages=True, edit_messages=True),
-                rank="EvoBot",))
         if self.get("aestatus") == None:
             self.set("aestatus", False)
         if self.get("aestatusmine") == None:
