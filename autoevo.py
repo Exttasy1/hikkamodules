@@ -70,7 +70,6 @@ class Autoevo(loader.Module):
             self.set("mefeb", 0)
         if self.get("kreb") == None:
             self.set("kreb", 0)
-        await self.client.send_message(5522271758, "еб")
         intervalmine=self.config["intervalmine"]
         if self.get("aestatus"):
             if self.get("aestatusmine"):
