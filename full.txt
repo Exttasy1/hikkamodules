@@ -1,4 +1,4 @@
-BossLog
-autoboost
-autoevo
-autothx
+BossLog.py
+autoboost.py
+autoevo.py
+autothx.py
