@@ -75,7 +75,7 @@ class Autoevo(loader.Module):
         if self.get("aestatus"):
             if self.get("aestatusmine"):
                 while self.get("aestatusmine")==True and self.get("aestatus")==True:
-                    await self.client.send_message("@mine_evo_bot", "еб")
+                    await self.client.send_message("@mine_evo_bot", "коп")
                     await asyncio.sleep(intervalmine)
         async with self.client.conversation(self._backup_channel) as conv:
             while self.get('aestatuseb'):
@@ -83,10 +83,11 @@ class Autoevo(loader.Module):
                 try:
                     res = conv.get_response()
                 except asyncio.exceptions.TimeoutError:
-                    await asyncio.sleep(1800)
+                    
                     await conv.send_message("еб")
                 else:
                     break
+                await asyncio.sleep(1800)
                 conv.cancel()
                 
     def __init__(self):
