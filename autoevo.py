@@ -83,11 +83,10 @@ class Autoevo(loader.Module):
                 try:
                     res = conv.get_response()
                 except asyncio.exceptions.TimeoutError:
-                    await asyncio.sleep(3)
+                    await asyncio.sleep(1800)
                     await conv.send_message("еб")
                 else:
                     break
-                await asyncio.sleep(1800)
                 conv.cancel()
                 
     def __init__(self):
