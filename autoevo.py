@@ -58,8 +58,10 @@ class Autoevo(loader.Module):
             self.set("mefeb", 0)
         if self.get("kreb") == None:
             self.set("kreb", 0)
-        self.mine_loop.start()
         self.eb_loop.start()
+        while self.get('aestatus') == True and self.get('aestatusmine') == True:
+            await self.client.send_message("@mine_evo_bot", 'коп')
+            await asyncio.sleep(self.config['intervalmine'])
                 
     def __init__(self):
         self.config = loader.ModuleConfig(
@@ -533,14 +535,8 @@ class Autoevo(loader.Module):
                             }
                         ]
                     ]
-            )
-
-    @loader.loop()
-    async def mine_loop(self):
-        if self.get('aestatus') == True and self.get('aestatusmine') == True:
-            await self.client.send_message("@mine_evo_bot", 'коп')
-            await asyncio.sleep(self.config['intervalmine'])
-
+        )
+        
     @loader.loop()
     async def eb_loop(self):
         if self.get('aestatus') == True and self.get('aestatuseb') == True:
